@@ -85,8 +85,22 @@
       };
 
       var updateScrollbarCss = function () {
+        
+        var triggerBottomEvent = false;
+        var maxTop = containerHeight - scrollbarYHeight;
         $scrollbarX.css({left: scrollbarXLeft + $this.scrollLeft(), bottom: scrollbarXBottom - $this.scrollTop(), width: scrollbarXWidth});
+
+        //Detect if Bottom Reached
+        if(parseInt($scrollbarY.css('top')) != ($this.scrollTop()+maxTop) && (scrollbarYTop == maxTop))
+        {
+          triggerBottomEvent = true;
+        }
         $scrollbarY.css({top: scrollbarYTop + $this.scrollTop(), right: scrollbarYRight - $this.scrollLeft(), height: scrollbarYHeight});
+
+        if(triggerBottomEvent)
+        {
+          $this.trigger('scrollBottom');
+        }
       };
 
       var updateBarSizeAndPosition = function () {
@@ -144,22 +158,27 @@
       var moveBarY = function (currentTop, deltaY) {
         var newTop = currentTop + deltaY,
             maxTop = containerHeight - scrollbarYHeight,
-            triggerEvent = false;
+            triggerBottomEvent = false;
 
         if (newTop < 0) {
           scrollbarYTop = 0;
         }
         else if (newTop > maxTop) {
           scrollbarYTop = maxTop;
-          triggerEvent = true;
 
         }
         else {
           scrollbarYTop = newTop;
         }
+
+        //Detect if Bottom Reached
+        if(parseInt($scrollbarY.css('top')) != ($this.scrollTop()+maxTop) && (scrollbarYTop == maxTop))
+        {
+          triggerBottomEvent = true;
+        }
         $scrollbarY.css({top: scrollbarYTop + $this.scrollTop()});
-        if(triggerEvent){
-          $this.trigger('perfect-scroll.scrolly-end');
+        if(triggerBottomEvent){
+          $this.trigger('scrollBottom');
         }
       };
 
