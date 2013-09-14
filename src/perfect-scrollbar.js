@@ -143,18 +143,24 @@
 
       var moveBarY = function (currentTop, deltaY) {
         var newTop = currentTop + deltaY,
-            maxTop = containerHeight - scrollbarYHeight;
+            maxTop = containerHeight - scrollbarYHeight,
+            triggerEvent = false;
 
         if (newTop < 0) {
           scrollbarYTop = 0;
         }
         else if (newTop > maxTop) {
           scrollbarYTop = maxTop;
+          triggerEvent = true;
+
         }
         else {
           scrollbarYTop = newTop;
         }
         $scrollbarY.css({top: scrollbarYTop + $this.scrollTop()});
+        if(triggerEvent){
+          $this.trigger('perfect-scroll.scrolly-end');
+        }
       };
 
       var bindMouseScrollXHandler = function () {
